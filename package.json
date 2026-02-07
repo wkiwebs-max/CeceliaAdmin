@@ -1,0 +1,22 @@
+{
+  "name": "cecilia-admin",
+  "version": "0.1.0",
+  "description": "Node.js project with Express server and native runner",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "run-native": "node src/native.js run"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "firebase-admin": "^12.5.0",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

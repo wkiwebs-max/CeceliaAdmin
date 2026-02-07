@@ -1,0 +1,4 @@
+node_modules/
+*.log
+.env
+clayanddou-firebase-adminsdk-gg1sf-c764e2c636.json

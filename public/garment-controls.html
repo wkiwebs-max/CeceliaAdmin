@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garment Controls - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 40px 30px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .brand-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #dc2626;
+      letter-spacing: 2px;
+      text-transform: capitalize;
+      margin-bottom: 5px;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .brand-tagline {
+      font-size: 0.7rem;
+      color: #6b7280;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 30px 0;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: 30px;
+    }
+
+    .nav-section-title {
+      padding: 0 30px;
+      font-size: 0.7rem;
+      color: #9ca3af;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .nav-item {
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #6b7280;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left-color: #dc2626;
+    }
+
+    .nav-item.active {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left-color: #dc2626;
+      font-weight: 500;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .sidebar-footer {
+      padding: 30px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 3px;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #dc2626;
+    }
+
+    .logout-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      fill: #111827;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+      background: #f8f9fa;
+      transition: margin-left 0.3s ease;
+    }
+
+    .top-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 25px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #111827;
+      letter-spacing: 1px;
+    }
+
+    .top-bar-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .action-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+    }
+
+    .action-btn.primary {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #dc2626;
+    }
+
+    .action-btn.primary:hover {
+      background: #b91c1c;
+    }
+
+    .action-btn:hover {
+      border-color: #dc2626;
+      color: #dc2626;
+    }
+
+    .content-area {
+      padding: 40px;
+    }
+
+    .page-content {
+      display: none;
+    }
+
+    .page-content.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    /* Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: #dc2626;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: #fef2f2;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .stat-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #dc2626;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .stat-change {
+      font-size: 0.8rem;
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    .stat-change.negative {
+      color: #ef4444;
+    }
+
+    /* Data Table */
+    .table-container {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 25px 30px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #111827;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f9fafb;
+    }
+
+    th {
+      padding: 16px 30px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6b7280;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+      padding: 20px 30px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    tr:hover {
+      background: #fef2f2;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .status-badge.active {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.completed {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: #6b7280;
+    }
+
+    .icon-btn:hover {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .icon-btn:hover svg {
+      fill: #dc2626;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      transition: 0.2s;
+      border-radius: 999px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+
+    .switch input:checked + .slider {
+      background-color: #dc2626;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 3000;
+    }
+
+    .toast {
+      background: #111827;
+      color: #ffffff;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      font-size: 0.95rem;
+      min-width: 280px;
+      animation: toastIn 0.2s ease-out;
+    }
+
+    .toast.success { background: #dc2626; }
+    .toast.error { background: #dc2626; }
+
+    .toast.big {
+      min-width: 360px;
+      font-size: 1rem;
+      padding: 18px 20px;
+    }
+
+    .toast-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+
+    .toast-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .toast-btn.secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .toast-btn.primary {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #dc2626;
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: none;
+    }
+
+    .nav-badge.visible {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 968px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .top-bar {
+        padding: 20px 20px 20px 70px;
+      }
+
+      .content-area {
+        padding: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .top-bar {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .top-bar-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 12px 16px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">Cecelialaurente</div>
+      <div class="brand-tagline">Since 2024</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Management</div>
+        <a href="#" class="nav-item active" data-page="garment-control">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          Garment Control
+        </a>
+        <a href="#" class="nav-item" data-page="orders-control">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          Orders Control
+          <span class="nav-badge" id="orders-badge">0</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Manager</div>
+        </div>
+      </div>
+      <button class="logout-btn" id="logout-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <h1 class="page-title" id="page-title">Garment Control</h1>
+      <div class="top-bar-actions">
+        <button class="action-btn" id="export-products">Export Products</button>
+        <button class="action-btn primary" id="add-product">Add Product</button>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Garment Control Page -->
+      <div class="page-content active" id="garment-control">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l4 4h-8l4-4zm-1 13h2v-2h-2v2zm-2 0h2v-2H9v2zm6 0h2v-2h-2v2zm-3-4h2v-2h-2v2zM9 11h2V9H9v2zm6 0h2V9h-2v2zM6 7v14h12V7H6z"/>
+              </svg>
+            </div>
+            <div class="stat-label">Total Garments</div>
+            <div class="stat-value" id="total-garments-count">0</div>
+            <div class="stat-change">+12% from last month</div>
+          </div>
+
+          <a class="stat-card" href="/manage-products.html" style="text-decoration: none; color: inherit;">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l4 4h-8l4-4zm-6 6h12v12H6V8zm2 2v8h8v-8H8z"/>
+              </svg>
+            </div>
+            <div class="stat-label">Manage Products</div>
+            <div class="stat-value">Open</div>
+            <div class="stat-change">Go to manage products</div>
+          </a>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h2 class="table-title">Products</h2>
+            <button class="action-btn" id="refresh-products">Refresh</button>
+          </div>
+          <div class="content-area" style="padding-top: 0;">
+            <div class="top-bar-actions" style="flex-wrap: wrap; gap: 10px;">
+              <input class="action-btn" style="text-align:left; flex: 1; min-width: 200px;" id="product-search" placeholder="Search products..." />
+              <select class="action-btn" id="filter-category" style="min-width: 140px;"></select>
+              <select class="action-btn" id="filter-size" style="min-width: 120px;"></select>
+              <select class="action-btn" id="filter-color" style="min-width: 120px;"></select>
+              <button class="action-btn" id="clear-filters">Clear</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>Image</th>
+                  <th>Back Image</th>
+                </tr>
+              </thead>
+              <tbody id="product-rows">
+                <tr>
+                  <td colspan="8">Loading products...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Control Page -->
+      <div class="page-content" id="orders-control">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="total-orders-count">0</div>
+            <div class="stat-change">+18% from last month</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="completed-orders-count">0</div>
+            <div class="stat-change">+5% this week</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+              </svg>
+            </div>
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value" id="revenue-total">R0</div>
+            <div class="stat-change">+22% this month</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h2 class="table-title">Recent Checkouts</h2>
+            <button class="action-btn" id="refresh-checkouts">Refresh</button>
+            <button class="action-btn" id="export-checkouts">Export Checkouts</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Checkout ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>City</th>
+                  <th>Address</th>
+                  <th>Postal Code</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Timestamp</th>
+                  <th>Paid</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="checkout-rows">
+                <tr>
+                  <td colspan="13">Loading checkouts...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const toastContainer = document.createElement('div');
+    toastContainer.className = 'toast-container';
+    document.body.appendChild(toastContainer);
+
+    const showToast = (message, type = 'success') => {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    };
+
+    const showConfirmToast = (message, onConfirm, confirmLabel = 'Yes, delete') => {
+      const toast = document.createElement('div');
+      toast.className = 'toast big error';
+
+      const text = document.createElement('div');
+      text.textContent = message;
+
+      const actions = document.createElement('div');
+      actions.className = 'toast-actions';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'toast-btn secondary';
+      cancelBtn.textContent = 'Cancel';
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.className = 'toast-btn primary';
+      confirmBtn.textContent = confirmLabel;
+
+      cancelBtn.addEventListener('click', () => toast.remove());
+      confirmBtn.addEventListener('click', () => {
+        toast.remove();
+        onConfirm?.();
+      });
+
+      actions.append(cancelBtn, confirmBtn);
+      toast.append(text, actions);
+      toastContainer.appendChild(toast);
+    };
+
+    const checkoutTableBody = document.getElementById('checkout-rows');
+    const refreshBtn = document.getElementById('refresh-checkouts');
+    const productTableBody = document.getElementById('product-rows');
+    const refreshProductsBtn = document.getElementById('refresh-products');
+    const exportProductsBtn = document.getElementById('export-products');
+    const exportCheckoutsBtn = document.getElementById('export-checkouts');
+    const addProductBtn = document.getElementById('add-product');
+    const searchInput = document.getElementById('product-search');
+    const filterCategory = document.getElementById('filter-category');
+    const filterSize = document.getElementById('filter-size');
+    const filterColor = document.getElementById('filter-color');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const ordersBadge = document.getElementById('orders-badge');
+
+    let latestProducts = [];
+    let latestCheckouts = [];
+    const ordersLastSeenKey = 'ordersLastSeen';
+
+    const formatDate = (value) => {
+      if (!value) return '';
+      if (value.toDate) return value.toDate().toLocaleString();
+      if (value._seconds || value.seconds) {
+        const seconds = value._seconds ?? value.seconds;
+        return new Date(seconds * 1000).toLocaleString();
+      }
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? '' : date.toLocaleString();
+    };
+
+    const getTimestampValue = (value) => {
+      if (!value) return 0;
+      if (value.toDate) return value.toDate().getTime();
+      if (value._seconds || value.seconds) {
+        const seconds = value._seconds ?? value.seconds;
+        return Number(seconds) * 1000;
+      }
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+    };
+
+    const updateOrdersBadge = (items) => {
+      if (!ordersBadge) return;
+      const lastSeen = Number(localStorage.getItem(ordersLastSeenKey) || 0);
+      const newCount = items.filter(item => getTimestampValue(item.timestamp || item.createdAt) > lastSeen).length;
+      if (newCount > 0) {
+        ordersBadge.textContent = newCount.toString();
+        ordersBadge.classList.add('visible');
+      } else {
+        ordersBadge.classList.remove('visible');
+      }
+    };
+
+    const markOrdersSeen = () => {
+      const latest = Math.max(...latestCheckouts.map(item => getTimestampValue(item.timestamp || item.createdAt)), 0);
+      localStorage.setItem(ordersLastSeenKey, String(latest));
+      if (ordersBadge) {
+        ordersBadge.classList.remove('visible');
+      }
+    };
+
+    const renderCheckouts = (items) => {
+      if (!checkoutTableBody) return;
+      if (!items.length) {
+        checkoutTableBody.innerHTML = '<tr><td colspan="13">No checkouts found.</td></tr>';
+        return;
+      }
+
+      checkoutTableBody.innerHTML = items.map((item) => {
+        const total = item.total ?? '';
+        const createdAt = formatDate(item.timestamp || item.createdAt);
+        const itemsList = Array.isArray(item.items)
+          ? item.items.map(i => `${i.name || 'Item'} x${i.quantity ?? 1} (${i.size || '-'}, ${i.color || '-'})`).join(', ')
+          : '';
+        const phoneNumber = item.phoneNumber || '';
+        const fullName = item.name || '';
+
+        return `
+          <tr>
+            <td>${item.id}</td>
+            <td>${fullName}</td>
+            <td>${item.email || ''}</td>
+            <td>${phoneNumber}</td>
+            <td>${item.country || ''}</td>
+            <td>${item.city || ''}</td>
+            <td>${item.address || ''}</td>
+            <td>${item.postalCode || ''}</td>
+            <td>${itemsList}</td>
+            <td>${total !== '' ? `R${total}` : ''}</td>
+            <td>${createdAt}</td>
+            <td>
+              <label class="switch">
+                <input type="checkbox" data-paid-id="${item.id}" ${item.paid ? 'checked' : ''}>
+                <span class="slider"></span>
+              </label>
+            </td>
+            <td>
+              <button class="action-btn" data-delete-id="${item.id}">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    };
+
+    const renderProducts = (items) => {
+      if (!productTableBody) return;
+      if (!items.length) {
+        productTableBody.innerHTML = '<tr><td colspan="8">No products found.</td></tr>';
+        return;
+      }
+
+      productTableBody.innerHTML = items.map((item) => {
+        const price = item.price ?? '';
+        return `
+          <tr>
+            <td>${item.itemId || item.id || ''}</td>
+            <td>${item.name || ''}</td>
+            <td>${item.category || ''}</td>
+            <td>${price !== '' ? `R${price}` : ''}</td>
+            <td>${item.size || ''}</td>
+            <td>${item.color || ''}</td>
+            <td>${item.imageUrl ? `<a href="${item.imageUrl}" target="_blank">View</a>` : ''}</td>
+            <td>${item.backImageUrl ? `<a href="${item.backImageUrl}" target="_blank">View</a>` : ''}</td>
+          </tr>
+        `;
+      }).join('');
+    };
+
+    const populateFilters = (items) => {
+      const unique = (arr) => ['All', ...Array.from(new Set(arr.filter(Boolean)))];
+      const categories = unique(items.map(p => p.category));
+      const sizes = ['All', 'S', 's', 'M', 'm', 'L', 'LXL', 'XL', 'xl'];
+      const colors = ['All', 'Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Grey', 'Gray', 'Navy', 'Pink', 'Purple', 'Orange', 'Brown'];
+
+      const fill = (select, values) => {
+        if (!select) return;
+        select.innerHTML = values.map(v => `<option value="${v}">${v}</option>`).join('');
+      };
+
+      fill(filterCategory, categories);
+      fill(filterSize, sizes);
+      fill(filterColor, colors);
+    };
+
+    const applyProductFilters = () => {
+      const term = (searchInput?.value || '').toLowerCase();
+      const category = filterCategory?.value || 'All';
+      const size = filterSize?.value || 'All';
+      const color = filterColor?.value || 'All';
+
+      const filtered = latestProducts.filter((p) => {
+        const matchesTerm = !term || [p.name, p.description, p.itemId].some(v => (v || '').toLowerCase().includes(term));
+        const matchesCategory = category === 'All' || p.category === category;
+        const matchesSize = size === 'All' || p.size === size;
+        const matchesColor = color === 'All' || p.color === color;
+        return matchesTerm && matchesCategory && matchesSize && matchesColor;
+      });
+
+      renderProducts(filtered);
+    };
+
+    const loadCheckouts = async () => {
+      if (!checkoutTableBody) return;
+      try {
+        const response = await fetch('/api/checkouts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch checkouts');
+        }
+        const items = await response.json();
+        const sortedItems = [...items].sort((a, b) => {
+          const aTime = getTimestampValue(a.timestamp || a.createdAt);
+          const bTime = getTimestampValue(b.timestamp || b.createdAt);
+          return bTime - aTime;
+        });
+        latestCheckouts = sortedItems;
+        renderCheckouts(sortedItems);
+        updateOrdersBadge(sortedItems);
+        const totalOrders = document.getElementById('total-orders-count');
+        if (totalOrders) {
+          totalOrders.textContent = sortedItems.length.toLocaleString();
+        }
+        const completedOrders = document.getElementById('completed-orders-count');
+        if (completedOrders) {
+          const paidCount = sortedItems.filter(item => item.paid === true).length;
+          completedOrders.textContent = paidCount.toLocaleString();
+        }
+        const revenueTotal = document.getElementById('revenue-total');
+        if (revenueTotal) {
+          const revenue = sortedItems.reduce((sum, item) => {
+            const value = Number(item.total);
+            return Number.isNaN(value) ? sum : sum + value;
+          }, 0);
+          revenueTotal.textContent = `R${revenue.toLocaleString()}`;
+        }
+      } catch (err) {
+        console.error('Failed to load checkouts:', err);
+        checkoutTableBody.innerHTML = '<tr><td colspan="13">Failed to load checkouts.</td></tr>';
+      }
+    };
+
+    const toCsv = (rows) => {
+      const escape = (value) => {
+        if (value === null || value === undefined) return '';
+        const str = String(value);
+        if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+
+      return rows.map(row => row.map(escape).join(',')).join('\n');
+    };
+
+    const downloadCsv = (filename, rows) => {
+      const csv = toCsv(rows);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const loadProducts = async () => {
+      if (!productTableBody) return;
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const payload = await response.json();
+        const items = payload.data || [];
+        latestProducts = items;
+        populateFilters(items);
+        applyProductFilters();
+        const totalGarments = document.getElementById('total-garments-count');
+        if (totalGarments) {
+          totalGarments.textContent = items.length.toLocaleString();
+        }
+      } catch (err) {
+        console.error('Failed to load products:', err);
+        productTableBody.innerHTML = '<tr><td colspan="8">Failed to load products.</td></tr>';
+      }
+    };
+
+    const updatePaid = async (id, paid) => {
+      try {
+        const response = await fetch(`/api/checkouts/${id}/paid`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paid })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update paid status');
+        }
+        showToast(`Marked as ${paid ? 'paid' : 'unpaid'}`, 'success');
+      } catch (err) {
+        console.error('Failed to update paid status:', err);
+        showToast('Failed to update paid status', 'error');
+      }
+    };
+
+    const deleteCheckout = async (id) => {
+      if (!id) return;
+      showConfirmToast('Are you sure you want to delete this order? This cannot be undone.', async () => {
+        try {
+          const response = await fetch(`/api/checkouts/${id}`, { method: 'DELETE' });
+          if (!response.ok) {
+            throw new Error('Failed to delete');
+          }
+          await loadCheckouts();
+          showToast('Checkout deleted', 'success');
+        } catch (err) {
+          console.error('Failed to delete checkout:', err);
+          showToast('Failed to delete checkout', 'error');
+        }
+      });
+    };
+    // Navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const pageTitle = document.getElementById('page-title');
+    const pageContents = document.querySelectorAll('.page-content');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all nav items
+        navItems.forEach(nav => nav.classList.remove('active'));
+        
+        // Add active class to clicked item
+        item.classList.add('active');
+        
+        // Get page to show
+        const pageToShow = item.getAttribute('data-page');
+        
+        // Hide all pages
+        pageContents.forEach(page => page.classList.remove('active'));
+        
+        // Show selected page
+        document.getElementById(pageToShow).classList.add('active');
+        
+        // Update page title
+        const titles = {
+          'garment-control': 'Garment Control',
+          'orders-control': 'Orders Control'
+        };
+        pageTitle.textContent = titles[pageToShow];
+
+        if (pageToShow === 'orders-control') {
+          markOrdersSeen();
+        }
+        
+        // Close mobile menu if open
+        if (window.innerWidth <= 968) {
+          document.getElementById('sidebar').classList.remove('active');
+        }
+      });
+    });
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileMenuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 968) {
+        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      showConfirmToast('Are you sure you want to sign out?', () => {
+        window.location.href = '/';
+      }, 'Yes, sign out');
+    });
+
+    refreshBtn?.addEventListener('click', loadCheckouts);
+    refreshProductsBtn?.addEventListener('click', loadProducts);
+    searchInput?.addEventListener('input', applyProductFilters);
+    filterCategory?.addEventListener('change', applyProductFilters);
+    filterSize?.addEventListener('change', applyProductFilters);
+    filterColor?.addEventListener('change', applyProductFilters);
+    clearFiltersBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      if (filterCategory) filterCategory.value = 'All';
+      if (filterSize) filterSize.value = 'All';
+      if (filterColor) filterColor.value = 'All';
+      applyProductFilters();
+    });
+    exportProductsBtn?.addEventListener('click', () => {
+      const rows = [
+        ['id', 'itemId', 'name', 'description', 'category', 'price', 'size', 'color', 'imageUrl', 'backImageUrl']
+      ];
+      latestProducts.forEach((p) => {
+        rows.push([
+          p.id || '',
+          p.itemId || '',
+          p.name || '',
+          p.description || '',
+          p.category || '',
+          p.price ?? '',
+          p.size || '',
+          p.color || '',
+          p.imageUrl || '',
+          p.backImageUrl || ''
+        ]);
+      });
+      downloadCsv('products.csv', rows);
+    });
+    exportCheckoutsBtn?.addEventListener('click', () => {
+      const rows = [
+        ['id', 'name', 'email', 'phoneNumber', 'address', 'city', 'country', 'postalCode', 'timestamp', 'total', 'paid']
+      ];
+      latestCheckouts.forEach((c) => {
+        rows.push([
+          c.id || '',
+          c.name || '',
+          c.email || '',
+          c.phoneNumber || '',
+          c.address || '',
+          c.city || '',
+          c.country || '',
+          c.postalCode || '',
+          formatDate(c.timestamp || c.createdAt),
+          c.total ?? '',
+          c.paid === true ? 'paid' : 'unpaid'
+        ]);
+      });
+      downloadCsv('checkouts.csv', rows);
+    });
+    addProductBtn?.addEventListener('click', () => {
+      window.location.href = '/manage-products.html#new';
+    });
+    checkoutTableBody?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target && target.matches('[data-delete-id]')) {
+        deleteCheckout(target.getAttribute('data-delete-id'));
+      }
+    });
+
+    checkoutTableBody?.addEventListener('change', (event) => {
+      const target = event.target;
+      if (target && target.matches('[data-paid-id]')) {
+        updatePaid(target.getAttribute('data-paid-id'), target.checked);
+      }
+    });
+    loadCheckouts();
+    loadProducts();
+  </script>
+</body>
+</html>

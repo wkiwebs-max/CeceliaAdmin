@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      color: #111827;
+    }
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+    .sidebar-header {
+      padding: 40px 30px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .brand-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #dc2626;
+      letter-spacing: 2px;
+      text-transform: capitalize;
+      margin-bottom: 5px;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .brand-tagline {
+      font-size: 0.7rem;
+      color: #6b7280;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 30px 0;
+      overflow-y: auto;
+    }
+    .nav-section-title {
+      padding: 0 30px;
+      font-size: 0.7rem;
+      color: #9ca3af;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+    .nav-item {
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #6b7280;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left-color: #dc2626;
+    }
+    .nav-item.active {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left-color: #dc2626;
+      font-weight: 500;
+    }
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+    .main-content {
+      margin-left: 280px;
+      padding: 40px;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    p { color: #6b7280; }
+    .toolbar { margin: 20px 0; display: flex; gap: 12px; }
+    .action-btn {
+      padding: 10px 20px;
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .secondary {
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #e5e7eb;
+    }
+    .products-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+    }
+    .list-panel, .detail-panel {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f3f4f6;
+      font-weight: 600;
+    }
+    .product-list {
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .product-list button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      border-bottom: 1px solid #f3f4f6;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: #111827;
+    }
+    .product-list button.active {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+    .detail-body {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .image-viewer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .image-frame {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .carousel-controls {
+      display: flex;
+      gap: 10px;
+    }
+    .carousel-controls button {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .details-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .details-grid label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .details-grid input,
+    .details-grid textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+    }
+    .details-grid textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .detail-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 10px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .modal h2 {
+      margin: 0 0 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .modal-grid > div {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-grid label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .modal-grid input, .modal-grid textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    .modal-grid textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .mobile-menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      fill: #111827;
+    }
+
+    @media screen and (max-width: 968px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .mobile-menu-toggle {
+        display: block;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+      .products-layout {
+        grid-template-columns: 1fr;
+      }
+      .detail-body {
+        grid-template-columns: 1fr;
+      }
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .detail-actions {
+        flex-direction: column;
+      }
+      .action-btn {
+        width: 100%;
+      }
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2000;
+    }
+
+    .toast {
+      background: #111827;
+      color: #ffffff;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      min-width: 280px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      animation: toastIn 0.25s ease;
+    }
+
+    .toast.success {
+      background: #dc2626;
+    }
+
+    .toast.error {
+      background: #dc2626;
+    }
+
+    .toast.big {
+      min-width: 360px;
+      font-size: 1rem;
+      padding: 18px 20px;
+    }
+
+    .toast-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+
+    .toast-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .toast-btn.secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .toast-btn.primary {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+  </button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">Cecelialaurente</div>
+      <div class="brand-tagline">Since 2024</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Management</div>
+      <a href="/garment-controls.html" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Garment Control
+      </a>
+      <a href="/manage-products.html" class="nav-item active">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2l4 4h-8l4-4zm-6 6h12v12H6V8zm2 2v8h8v-8H8z"/>
+        </svg>
+        Manage Products
+      </a>
+      <a href="/garment-controls.html" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Orders Control
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <h1>Manage Products</h1>
+    <p>Select a product to view details, edit, or delete.</p>
+
+    <div class="toolbar">
+      <button class="action-btn" id="open-new-product">Add Product</button>
+      <button class="action-btn secondary" id="export-products">Export Products</button>
+      <a class="action-btn secondary" href="/garment-controls.html">Back to Dashboard</a>
+    </div>
+
+    <div class="products-layout">
+      <section class="list-panel">
+        <div class="panel-header">Products</div>
+        <div class="product-list" id="product-list">
+          <button disabled>Loading products...</button>
+        </div>
+      </section>
+
+      <section class="detail-panel">
+        <div class="panel-header">Product Details</div>
+        <div class="detail-body">
+          <div class="image-viewer">
+            <div class="image-frame">
+              <img id="product-image" alt="Product image" />
+            </div>
+            <div class="carousel-controls">
+              <button type="button" id="image-prev">Front</button>
+              <button type="button" id="image-next">Back</button>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div>
+              <label>Name</label>
+              <input id="field-name" type="text" disabled />
+            </div>
+            <div>
+              <label>Price</label>
+              <input id="field-price" type="number" disabled />
+            </div>
+            <div>
+              <label>Description</label>
+              <textarea id="field-description" disabled></textarea>
+            </div>
+            <div>
+              <label>Category</label>
+              <input id="field-category" type="text" disabled />
+            </div>
+            <div>
+              <label>Size</label>
+              <input id="field-size" type="text" disabled />
+            </div>
+            <div>
+              <label>Color</label>
+              <input id="field-color" type="text" disabled />
+            </div>
+            <div>
+              <label>Item ID</label>
+              <input id="field-itemId" type="text" disabled />
+            </div>
+            <div>
+              <label>Image URL</label>
+              <input id="field-imageUrl" type="text" disabled />
+            </div>
+            <div>
+              <label>Back Image URL</label>
+              <input id="field-backImageUrl" type="text" disabled />
+            </div>
+          </div>
+
+          <div class="detail-actions">
+            <button class="action-btn secondary" id="edit-product">Edit</button>
+            <button class="action-btn" id="delete-product">Delete</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="product-modal">
+    <div class="modal">
+      <h2>Add New Product</h2>
+      <form id="new-product-form">
+        <div class="modal-grid">
+          <input id="new-itemId" type="hidden" />
+          <div>
+            <label>Name</label>
+            <input id="new-name" type="text" required />
+          </div>
+          <div>
+            <label>Description</label>
+            <textarea id="new-description" required></textarea>
+          </div>
+          <div>
+            <label>Category</label>
+            <input id="new-category" type="text" required />
+          </div>
+          <div>
+            <label>Price</label>
+            <input id="new-price" type="number" required />
+          </div>
+          <div>
+            <label>Size</label>
+            <input id="new-size" type="text" required />
+          </div>
+          <div>
+            <label>Color</label>
+            <input id="new-color" type="text" required />
+          </div>
+          <div>
+            <label>Image URL</label>
+            <input id="new-imageUrl" type="text" required />
+          </div>
+          <div>
+            <label>Back Image URL</label>
+            <input id="new-backImageUrl" type="text" required />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="action-btn secondary" type="button" id="cancel-new-product">Cancel</button>
+          <button class="action-btn" type="submit">Create Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const toastContainer = document.createElement('div');
+    toastContainer.className = 'toast-container';
+    document.body.appendChild(toastContainer);
+
+    const showToast = (message, type = 'success') => {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    };
+
+    const showConfirmToast = (message, onConfirm, confirmLabel = 'Yes, delete') => {
+      const toast = document.createElement('div');
+      toast.className = 'toast big error';
+
+      const text = document.createElement('div');
+      text.textContent = message;
+
+      const actions = document.createElement('div');
+      actions.className = 'toast-actions';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'toast-btn secondary';
+      cancelBtn.textContent = 'Cancel';
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.className = 'toast-btn primary';
+      confirmBtn.textContent = confirmLabel;
+
+      cancelBtn.addEventListener('click', () => toast.remove());
+      confirmBtn.addEventListener('click', () => {
+        toast.remove();
+        onConfirm?.();
+      });
+
+      actions.append(cancelBtn, confirmBtn);
+      toast.append(text, actions);
+      toastContainer.appendChild(toast);
+    };
+
+    const productList = document.getElementById('product-list');
+    const imageEl = document.getElementById('product-image');
+    const imagePrev = document.getElementById('image-prev');
+    const imageNext = document.getElementById('image-next');
+    const editBtn = document.getElementById('edit-product');
+    const deleteBtn = document.getElementById('delete-product');
+    const addProductBtn = document.getElementById('open-new-product');
+    const exportBtn = document.getElementById('export-products');
+    const modal = document.getElementById('product-modal');
+    const cancelNewProduct = document.getElementById('cancel-new-product');
+    const newProductForm = document.getElementById('new-product-form');
+
+    const fieldMap = {
+      name: document.getElementById('field-name'),
+      price: document.getElementById('field-price'),
+      description: document.getElementById('field-description'),
+      category: document.getElementById('field-category'),
+      size: document.getElementById('field-size'),
+      color: document.getElementById('field-color'),
+      itemId: document.getElementById('field-itemId'),
+      imageUrl: document.getElementById('field-imageUrl'),
+      backImageUrl: document.getElementById('field-backImageUrl')
+    };
+
+    let products = [];
+    let selectedIndex = 0;
+    let showingBack = false;
+    let isEditing = false;
+
+    const generateItemId = () => {
+      if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+      return `item-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+    };
+
+    const setEditing = (state) => {
+      isEditing = state;
+      Object.keys(fieldMap).forEach((key) => {
+        if (key === 'itemId') return;
+        fieldMap[key].disabled = !state;
+      });
+      editBtn.textContent = state ? 'Save' : 'Edit';
+      editBtn.classList.toggle('secondary', !state);
+    };
+
+    const setImage = () => {
+      if (!products[selectedIndex]) return;
+      const product = products[selectedIndex];
+      const src = showingBack ? product.backImageUrl : product.imageUrl;
+      imageEl.src = src || '';
+      imageEl.alt = product.name || 'Product image';
+    };
+
+    const renderList = () => {
+      if (!productList) return;
+      if (!products.length) {
+        productList.innerHTML = '<button disabled>No products found.</button>';
+        return;
+      }
+
+      productList.innerHTML = products.map((product, index) => {
+        const activeClass = index === selectedIndex ? 'active' : '';
+        return `<button class="${activeClass}" data-index="${index}">${product.name || product.itemId || product.id || 'Unnamed'}</button>`;
+      }).join('');
+    };
+
+    const renderDetails = () => {
+      if (!products[selectedIndex]) return;
+      const product = products[selectedIndex];
+      fieldMap.name.value = product.name || '';
+      fieldMap.price.value = product.price ?? '';
+      fieldMap.description.value = product.description || '';
+      fieldMap.category.value = product.category || '';
+      fieldMap.size.value = product.size || '';
+      fieldMap.color.value = product.color || '';
+      fieldMap.itemId.value = product.itemId || product.id || '';
+      fieldMap.imageUrl.value = product.imageUrl || '';
+      fieldMap.backImageUrl.value = product.backImageUrl || '';
+      setImage();
+    };
+
+    const loadProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const payload = await response.json();
+        products = payload.data || [];
+        selectedIndex = 0;
+        showingBack = false;
+        renderList();
+        renderDetails();
+        setEditing(false);
+      } catch (err) {
+        console.error('Failed to load products:', err);
+        productList.innerHTML = '<button disabled>Failed to load products.</button>';
+      }
+    };
+
+    const toCsv = (rows) => {
+      const escape = (value) => {
+        if (value === null || value === undefined) return '';
+        const str = String(value);
+        if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+
+      return rows.map(row => row.map(escape).join(',')).join('\n');
+    };
+
+    const downloadCsv = (filename, rows) => {
+      const csv = toCsv(rows);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    productList?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target && target.matches('[data-index]')) {
+        selectedIndex = Number(target.getAttribute('data-index'));
+        showingBack = false;
+        renderList();
+        renderDetails();
+        setEditing(false);
+      }
+    });
+
+    imagePrev?.addEventListener('click', () => {
+      showingBack = false;
+      setImage();
+    });
+
+    imageNext?.addEventListener('click', () => {
+      showingBack = true;
+      setImage();
+    });
+
+    editBtn?.addEventListener('click', async () => {
+      if (!products[selectedIndex]) return;
+      if (!isEditing) {
+        setEditing(true);
+        return;
+      }
+
+      const product = products[selectedIndex];
+      const update = {
+        name: fieldMap.name.value.trim(),
+        price: Number(fieldMap.price.value),
+        description: fieldMap.description.value.trim(),
+        category: fieldMap.category.value.trim(),
+        size: fieldMap.size.value.trim(),
+        color: fieldMap.color.value.trim(),
+        imageUrl: fieldMap.imageUrl.value.trim(),
+        backImageUrl: fieldMap.backImageUrl.value.trim()
+      };
+
+      try {
+        const response = await fetch(`/api/products/${product.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(update)
+        });
+        if (!response.ok) throw new Error('Failed to update product');
+        await loadProducts();
+        showToast('Product updated', 'success');
+      } catch (err) {
+        console.error('Failed to update product:', err);
+        showToast('Failed to update product', 'error');
+      }
+    });
+
+    deleteBtn?.addEventListener('click', async () => {
+      if (!products[selectedIndex]) return;
+      showConfirmToast('Are you sure you want to delete this product? This cannot be undone.', async () => {
+        try {
+          const response = await fetch(`/api/products/${products[selectedIndex].id}`, { method: 'DELETE' });
+          if (!response.ok) throw new Error('Failed to delete product');
+          await loadProducts();
+          showToast('Product deleted', 'success');
+        } catch (err) {
+          console.error('Failed to delete product:', err);
+          showToast('Failed to delete product', 'error');
+        }
+      });
+    });
+
+    addProductBtn?.addEventListener('click', () => {
+      modal?.classList.add('active');
+      const itemIdField = document.getElementById('new-itemId');
+      if (itemIdField) {
+        itemIdField.value = generateItemId();
+      }
+    });
+
+    cancelNewProduct?.addEventListener('click', () => {
+      modal?.classList.remove('active');
+      newProductForm?.reset();
+    });
+
+    modal?.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.classList.remove('active');
+        newProductForm?.reset();
+      }
+    });
+
+    newProductForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const itemIdField = document.getElementById('new-itemId');
+      if (itemIdField && !itemIdField.value.trim()) {
+        itemIdField.value = generateItemId();
+      }
+      const payload = {
+        itemId: document.getElementById('new-itemId').value.trim(),
+        name: document.getElementById('new-name').value.trim(),
+        description: document.getElementById('new-description').value.trim(),
+        category: document.getElementById('new-category').value.trim(),
+        price: Number(document.getElementById('new-price').value),
+        size: document.getElementById('new-size').value.trim(),
+        color: document.getElementById('new-color').value.trim(),
+        imageUrl: document.getElementById('new-imageUrl').value.trim(),
+        backImageUrl: document.getElementById('new-backImageUrl').value.trim()
+      };
+
+      try {
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('Failed to create product');
+        modal?.classList.remove('active');
+        newProductForm.reset();
+        await loadProducts();
+        showToast('Product created', 'success');
+      } catch (err) {
+        console.error('Failed to create product:', err);
+        showToast('Failed to create product', 'error');
+      }
+    });
+
+    exportBtn?.addEventListener('click', () => {
+      const rows = [
+        ['id', 'itemId', 'name', 'description', 'category', 'price', 'size', 'color', 'imageUrl', 'backImageUrl']
+      ];
+      products.forEach((p) => {
+        rows.push([
+          p.id || '',
+          p.itemId || '',
+          p.name || '',
+          p.description || '',
+          p.category || '',
+          p.price ?? '',
+          p.size || '',
+          p.color || '',
+          p.imageUrl || '',
+          p.backImageUrl || ''
+        ]);
+      });
+      downloadCsv('products.csv', rows);
+    });
+
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileMenuToggle?.addEventListener('click', () => {
+      sidebar?.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 968) {
+        if (sidebar && !sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    if (window.location.hash === '#new') {
+      modal?.classList.add('active');
+    }
+    loadProducts();
+  </script>
+</body>
+</html>

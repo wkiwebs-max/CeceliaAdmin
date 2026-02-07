@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Luxury Fashion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+    .image-section {
+      flex: 1.2;
+      position: relative;
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
+                  url('data:image/svg+xml,<svg width="1200" height="1600" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="1600" fill="%23DC2626"/><text x="50%" y="50%" font-family="serif" font-size="200" fill="white" opacity="0.1" text-anchor="middle" dominant-baseline="middle">LUXURY</text></svg>');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 60px;
+      overflow: hidden;
+    }
+    .image-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
+      pointer-events: none;
+    }
+    .brand-logo { position: relative; z-index: 2; }
+    .brand-logo h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 300; color: #ffffff; letter-spacing: 4px; text-transform: capitalize; margin-bottom: 10px; word-break: break-word;
+    }
+    .brand-tagline {
+      font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.9); letter-spacing: 3px; text-transform: uppercase; font-weight: 300;
+    }
+    .image-content { position: relative; z-index: 2; color: #ffffff; }
+    .collection-text {
+      font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.2; margin-bottom: 20px; font-style: italic;
+    }
+    .collection-description {
+      font-family: 'Montserrat', sans-serif; font-size: 0.95rem; letter-spacing: 1px; line-height: 1.8; max-width: 500px; font-weight: 300; opacity: 0.95;
+    }
+    .form-section {
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px; background: #ffffff; position: relative;
+    }
+    .form-section::before {
+      content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: linear-gradient(135deg, rgba(220,38,38,0.03) 0%, transparent 100%); border-radius: 0 0 0 100%;
+    }
+    .form-wrapper { width: 100%; max-width: 480px; position: relative; z-index: 2; }
+    .form-header { margin-bottom: 40px; text-align: center; }
+    .form-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 300; color: #111827; margin-bottom: 10px; letter-spacing: 2px;
+    }
+    .form-subtitle {
+      font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #6b7280; letter-spacing: 2px; text-transform: uppercase; font-weight: 300;
+    }
+    .divider { width: 60px; height: 1px; background: #dc2626; margin: 25px auto; }
+    .input-group { margin-bottom: 30px; position: relative; }
+    .input-group label {
+      display: block; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 500; color: #111827; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .input-group input {
+      width: 100%; padding: 16px 0; border: none; border-bottom: 1px solid #e5e7eb; font-size: 1.05rem; font-family: 'Montserrat', sans-serif; font-weight: 300; transition: all 0.3s ease; background: transparent; color: #111827; letter-spacing: 0.5px;
+    }
+    .input-group input:focus { outline: none; border-bottom-color: #dc2626; }
+    .input-group input::placeholder { color: #d1d5db; font-weight: 300; }
+    .input-underline { position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #dc2626; transition: width 0.3s ease; }
+    .input-group input:focus ~ .input-underline { width: 100%; }
+    .submit-btn {
+      width: 100%; padding: 18px; background: #dc2626; color: #ffffff; border: none; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.4s ease; letter-spacing: 3px; text-transform: uppercase; position: relative; overflow: hidden;
+    }
+    .submit-btn:hover { background: #b91c1c; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(220,38,38,0.3); }
+    .submit-btn:active { transform: translateY(0); }
+    .status-text { margin-top: 15px; font-size: 0.85rem; color: #6b7280; text-align: center; min-height: 20px; }
+    .create-account { text-align: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid #f3f4f6; }
+    .create-account a { color: #dc2626; text-decoration: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; }
+    .create-account a:hover { color: #b91c1c; text-decoration: underline; }
+    @media screen and (max-width: 968px) {
+      body { flex-direction: column; }
+      .image-section { min-height: 40vh; padding: 40px 30px; }
+      .form-section { padding: 60px 30px; }
+      .form-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="image-section">
+    <div class="brand-logo">
+      <h1>Cecelialaurente</h1>
+      <p class="brand-tagline">Since 2024</p>
+    </div>
+    <div class="image-content">
+      <h2 class="collection-text">Create Your<br>Account</h2>
+      <p class="collection-description">
+        Join our curated community and manage your luxury collections with ease.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2 class="form-title">Sign Up</h2>
+        <div class="divider"></div>
+        <p class="form-subtitle">Create your account</p>
+      </div>
+
+      <form id="signup-form">
+        <div class="input-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Jane Doe" required />
+          <div class="input-underline"></div>
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          <div class="input-underline"></div>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a strong password" minlength="6" required />
+          <div class="input-underline"></div>
+        </div>
+
+        <div class="input-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat your password" minlength="6" required />
+          <div class="input-underline"></div>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+        <div class="status-text" id="status-text"></div>
+
+        <div class="create-account">
+          <a href="/">Back to Sign In</a>
+        </div>
+
+        <div class="create-account" style="margin-top: 20px; border-top: none;">
+          <button type="button" id="google-signup" class="submit-btn" style="background:#111827;">Continue with Google</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase.js';
+    import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const form = document.getElementById('signup-form');
+    const statusText = document.getElementById('status-text');
+    const googleBtn = document.getElementById('google-signup');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusText.textContent = 'Creating account...';
+
+      const fullName = form.fullName.value.trim();
+      const email = form.email.value.trim();
+      const password = form.password.value;
+      const confirmPassword = form.confirmPassword.value;
+
+      if (password !== confirmPassword) {
+        statusText.textContent = 'Passwords do not match.';
+        return;
+      }
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(cred.user, { displayName: fullName });
+
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          uid: cred.user.uid,
+          fullName,
+          email,
+          createdAt: serverTimestamp()
+        });
+
+        statusText.textContent = 'Account created. Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/garment-controls.html';
+        }, 800);
+      } catch (err) {
+        statusText.textContent = err.message || 'Failed to create account.';
+      }
+    });
+
+    googleBtn.addEventListener('click', async () => {
+      statusText.textContent = 'Signing up with Google...';
+      try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+
+        if (result.user) {
+          await setDoc(doc(db, 'users', result.user.uid), {
+            uid: result.user.uid,
+            fullName: result.user.displayName || '',
+            email: result.user.email || '',
+            createdAt: serverTimestamp()
+          }, { merge: true });
+        }
+
+        statusText.textContent = 'Signed in. Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/garment-controls.html';
+        }, 800);
+      } catch (err) {
+        statusText.textContent = err.message || 'Google sign-in failed.';
+      }
+    });
+  </script>
+</body>
+</html>
