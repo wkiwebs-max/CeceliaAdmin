@@ -113,90 +113,25 @@
       <div class="form-header">
         <h2 class="form-title">Sign Up</h2>
         <div class="divider"></div>
-        <p class="form-subtitle">Create your account</p>
+        <p class="form-subtitle">Continue with Google</p>
       </div>
-
-      <form id="signup-form">
-        <div class="input-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" placeholder="Jane Doe" required />
-          <div class="input-underline"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="your@email.com" required />
-          <div class="input-underline"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Create a strong password" minlength="6" required />
-          <div class="input-underline"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat your password" minlength="6" required />
-          <div class="input-underline"></div>
-        </div>
-
-        <button type="submit" class="submit-btn">Create Account</button>
-        <div class="status-text" id="status-text"></div>
-
-        <div class="create-account">
-          <a href="/">Back to Sign In</a>
-        </div>
-
-        <div class="create-account" style="margin-top: 20px; border-top: none;">
-          <button type="button" id="google-signup" class="submit-btn" style="background:#111827;">Continue with Google</button>
-        </div>
-      </form>
+      <div class="status-text" id="status-text" style="margin-bottom: 20px;"></div>
+      <div class="create-account">
+        <a href="/">Back to Sign In</a>
+      </div>
+      <div class="create-account" style="margin-top: 20px; border-top: none;">
+        <button type="button" id="google-signup" class="submit-btn" style="background:#111827;">Continue with Google</button>
+      </div>
     </div>
   </div>
 
   <script type="module">
     import { auth, db } from './firebase.js';
-    import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    const form = document.getElementById('signup-form');
     const statusText = document.getElementById('status-text');
     const googleBtn = document.getElementById('google-signup');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      statusText.textContent = 'Creating account...';
-
-      const fullName = form.fullName.value.trim();
-      const email = form.email.value.trim();
-      const password = form.password.value;
-      const confirmPassword = form.confirmPassword.value;
-
-      if (password !== confirmPassword) {
-        statusText.textContent = 'Passwords do not match.';
-        return;
-      }
-
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(cred.user, { displayName: fullName });
-
-        await setDoc(doc(db, 'users', cred.user.uid), {
-          uid: cred.user.uid,
-          fullName,
-          email,
-          createdAt: serverTimestamp()
-        });
-
-        statusText.textContent = 'Account created. Redirecting...';
-        setTimeout(() => {
-          window.location.href = '/garment-controls.html';
-        }, 800);
-      } catch (err) {
-        statusText.textContent = err.message || 'Failed to create account.';
-      }
-    });
 
     googleBtn.addEventListener('click', async () => {
       statusText.textContent = 'Signing up with Google...';
