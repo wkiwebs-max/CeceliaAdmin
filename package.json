@@ -5,8 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "run-native": "node src/native.js run"
+    "dev": "nodemon src/server.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

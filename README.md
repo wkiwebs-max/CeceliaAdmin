@@ -14,15 +14,9 @@ npm start
 
 Open http://localhost:3000 to view the page served from the public folder.
 
-Run a native executable:
-
-```bash
-npm run run-native -- ./my-native-app.exe
-```
-
 Vercel deployment
 
 - Static files in public/ are served automatically.
-- Serverless API routes live in api/ (example: /api/health).
+- Serverless API routes live in api/.
 
 You can deploy this repo to Vercel without changes.
